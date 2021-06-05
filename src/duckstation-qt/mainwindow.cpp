@@ -20,6 +20,7 @@
 #include "scmversion/scmversion.h"
 #include "settingsdialog.h"
 #include "settingwidgetbinder.h"
+#include "texturereplacementsettingsdialog.h"
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
@@ -1158,6 +1159,8 @@ void MainWindow::connectSignals()
           [this]() { doSettings(SettingsDialog::Category::AchievementSettings); });
   connect(m_ui.actionAdvancedSettings, &QAction::triggered,
           [this]() { doSettings(SettingsDialog::Category::AdvancedSettings); });
+  connect(m_ui.actionTextureReplacementSettings, &QAction::triggered, this,
+          &MainWindow::onTextureReplacementSettingsTriggered);
   connect(m_ui.actionViewToolbar, &QAction::toggled, this, &MainWindow::onViewToolbarActionToggled);
   connect(m_ui.actionViewLockToolbar, &QAction::toggled, this, &MainWindow::onViewLockToolbarActionToggled);
   connect(m_ui.actionViewStatusBar, &QAction::toggled, this, &MainWindow::onViewStatusBarActionToggled);
@@ -1787,6 +1790,22 @@ void MainWindow::onCPUDebuggerClosed()
 void MainWindow::onToolsOpenDataDirectoryTriggered()
 {
   QtUtils::OpenURL(this, QUrl::fromLocalFile(m_host_interface->getUserDirectoryRelativePath(QString())));
+}
+
+void MainWindow::onTextureReplacementSettingsTriggered()
+{
+  if (!m_texture_replacement_settings_dialog)
+    m_texture_replacement_settings_dialog = new TextureReplacementSettingsDialog(this);
+
+  if (!m_texture_replacement_settings_dialog->isVisible())
+  {
+    m_texture_replacement_settings_dialog->setModal(false);
+    m_texture_replacement_settings_dialog->show();
+  }
+  else
+  {
+    m_texture_replacement_settings_dialog->setFocus();
+  }
 }
 
 void MainWindow::checkForUpdates(bool display_message)
