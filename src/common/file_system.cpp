@@ -2485,6 +2485,7 @@ std::string GetWorkingDirectory()
     buffer.resize(buffer.size() * 2);
   }
 
+  buffer.resize(strlen(buffer.c_str())); // Remove excess nulls
   return buffer;
 }
 
